@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- 主题色：由各主题（Theme_MyFiles_*）覆盖，布局里用 ?attr/accent 引用  -->
+    <attr name="accent" format="color|reference" />
+    <attr name="accentDim" format="color|reference" />
+    <attr name="accentSoft" format="color|reference" />
+    <!-- 顶栏背景色（主题色的深色版）与顶栏前景色 -->
+    <attr name="accentDark" format="color|reference" />
+    <attr name="onAccent" format="color|reference" />
+</resources>

@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@android:color/black">
+
+    <com.mtstyle.fm.ZoomImageView
+        android:id="@+id/viewer_image"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:contentDescription="@string/image_view" />
+
+    <TextView
+        android:id="@+id/viewer_loading"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:text="@string/image_loading"
+        android:textColor="#CCFFFFFF"
+        android:textSize="14sp" />
+
+    <!-- 顶栏：文件名 + 位置 + 更多 -->
+    <LinearLayout
+        android:id="@+id/viewer_top"
+        android:layout_width="match_parent"
+        android:layout_height="52dp"
+        android:layout_gravity="top"
+        android:background="@drawable/bg_viewer_bar"
+        android:gravity="center_vertical"
+        android:orientation="horizontal">
+
+        <ImageView
+            android:id="@+id/viewer_back"
+            android:layout_width="44dp"
+            android:layout_height="match_parent"
+            android:background="@drawable/list_selector"
+            android:contentDescription="@string/act_back"
+            android:padding="12dp"
+            android:src="@drawable/ic_up"
+            android:tint="#FFFFFFFF" />
+
+        <TextView
+            android:id="@+id/viewer_title"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:ellipsize="middle"
+            android:paddingLeft="6dp"
+            android:singleLine="true"
+            android:textColor="#FFFFFFFF"
+            android:textSize="16sp" />
+
+        <TextView
+            android:id="@+id/viewer_position"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingLeft="6dp"
+            android:paddingRight="6dp"
+            android:singleLine="true"
+            android:textColor="#CCFFFFFF"
+            android:textSize="12sp" />
+
+        <ImageView
+            android:id="@+id/viewer_more"
+            android:layout_width="44dp"
+            android:layout_height="match_parent"
+            android:background="@drawable/list_selector"
+            android:contentDescription="@string/more"
+            android:padding="12dp"
+            android:src="@drawable/ic_more"
+            android:tint="#FFFFFFFF" />
+    </LinearLayout>
+
+    <!-- 底栏：图片信息 + 快捷操作 -->
+    <LinearLayout
+        android:id="@+id/viewer_bottom"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom"
+        android:background="@drawable/bg_viewer_bar"
+        android:orientation="vertical"
+        android:paddingTop="8dp"
+        android:paddingBottom="8dp">
+
+        <TextView
+            android:id="@+id/viewer_info"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ellipsize="end"
+            android:paddingLeft="14dp"
+            android:paddingRight="14dp"
+            android:singleLine="true"
+            android:textColor="#CCFFFFFF"
+            android:textSize="12sp" />
+
+        <TextView
+            android:id="@+id/viewer_hint"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingLeft="14dp"
+            android:paddingRight="14dp"
+            android:paddingTop="2dp"
+            android:text="@string/image_viewer_hint"
+            android:textColor="#80FFFFFF"
+            android:textSize="11sp" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/viewer_share"
+                style="@style/ViewerAction"
+                android:text="@string/act_share" />
+
+            <TextView
+                android:id="@+id/viewer_info_action"
+                style="@style/ViewerAction"
+                android:text="@string/act_info" />
+
+            <TextView
+                android:id="@+id/viewer_open_with"
+                style="@style/ViewerAction"
+                android:text="@string/apk_open_with" />
+        </LinearLayout>
+    </LinearLayout>
+</FrameLayout>

@@ -1,0 +1,18 @@
+pluginManagement {
+    repositories {
+        maven { url 'file:///opt/maven-repo' }
+        google()
+        mavenCentral()
+        gradlePluginPortal()
+    }
+}
+dependencyResolutionManagement {
+    repositoriesMode = RepositoriesMode.FAIL_ON_PROJECT_REPOS
+    repositories {
+        maven { url 'file:///opt/maven-repo' }
+        google()
+        mavenCentral()
+    }
+}
+rootProject.name = "MTFileManager"
+include ':app'

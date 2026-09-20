@@ -1,0 +1,31 @@
+# 构建产物
+build/
+app/build/
+.gradle/
+.gradle-tmp/
+*.apk
+*.ap_
+*.dex
+*.class
+
+# 本地配置与 IDE
+local.properties
+.idea/
+*.iml
+*.ipr
+*.iws
+captures/
+
+# 系统文件
+.DS_Store
+Thumbs.db
+
+# 签名密钥（应用运行时会自行生成，切勿提交私钥）
+*.pk8
+*.jks
+*.keystore
+signkey/
+
+# 例外：assets 里的预编译 dex / 演示密钥库是应用运行时资源，必须入库
+!app/src/main/assets/*.dex
+!app/src/main/assets/inject.keystore

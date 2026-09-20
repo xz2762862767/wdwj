@@ -1,0 +1,159 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_marginLeft="5dp"
+    android:layout_marginTop="5dp"
+    android:layout_marginRight="5dp"
+    android:layout_marginBottom="5dp"
+    android:background="@drawable/bg_pane"
+    android:orientation="vertical">
+
+    <TextView
+        android:id="@+id/path_bar"
+        style="@style/PathBar"
+        android:layout_width="match_parent"
+        android:layout_height="34dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginRight="8dp"
+        android:layout_marginBottom="4dp"
+        android:drawableStart="@drawable/ic_folder"
+        android:drawableTint="?attr/accent"
+        android:text="/" />
+
+    <!-- MT 风格：路径栏下方的「文件夹/文件/储存」信息行 -->
+    <TextView
+        android:id="@+id/pane_status"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:ellipsize="end"
+        android:paddingLeft="12dp"
+        android:paddingTop="1dp"
+        android:paddingRight="12dp"
+        android:paddingBottom="5dp"
+        android:singleLine="true"
+        android:textColor="@color/text_secondary"
+        android:textSize="10sp" />
+
+    <com.mtstyle.fm.MtPullRefresh
+        android:id="@+id/pane_swipe"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1">
+
+        <!-- 下拉提示条（MT 风格：小箭头 + 文字，刷新时只有细进度线，无圆圈） -->
+        <LinearLayout
+            android:id="@+id/pull_indicator"
+            android:layout_width="match_parent"
+            android:layout_height="64dp"
+            android:background="@color/status_bg"
+            android:gravity="bottom"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="28dp"
+                android:gravity="center"
+                android:orientation="horizontal">
+
+                <ImageView
+                    android:id="@+id/pull_arrow"
+                    android:layout_width="13dp"
+                    android:layout_height="13dp"
+                    android:src="@drawable/ic_pull_arrow" />
+
+                <TextView
+                    android:id="@+id/pull_text"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="6dp"
+                    android:text="@string/pull_down"
+                    android:textColor="@color/text_secondary"
+                    android:textSize="12sp" />
+            </LinearLayout>
+
+            <ProgressBar
+                android:id="@+id/pull_line"
+                style="?android:attr/progressBarStyleHorizontal"
+                android:layout_width="match_parent"
+                android:layout_height="2dp"
+                android:indeterminate="true"
+                android:visibility="gone" />
+        </LinearLayout>
+
+        <FrameLayout
+            android:id="@+id/pane_content"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <ListView
+                android:id="@+id/file_list"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@android:color/transparent"
+                android:divider="@null"
+                android:dividerHeight="0dp"
+                android:listSelector="@drawable/list_selector"
+                android:paddingTop="2dp"
+                android:paddingBottom="4dp"
+                android:scrollbars="none" />
+
+            <TextView
+                android:id="@+id/pane_empty"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:gravity="center"
+                android:padding="14dp"
+                android:text="@string/empty"
+                android:textColor="@color/text_secondary"
+                android:textSize="11sp"
+                android:visibility="gone" />
+        </FrameLayout>
+    </com.mtstyle.fm.MtPullRefresh>
+
+    <!-- ============ 底部操作栏（MT 风格）============ -->
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/divider" />
+
+    <LinearLayout
+        android:id="@+id/pane_tools"
+        android:layout_width="match_parent"
+        android:layout_height="42dp"
+        android:gravity="center_vertical"
+        android:orientation="horizontal">
+
+        <ImageButton
+            android:id="@+id/tool_up"
+            style="@style/PaneToolButton"
+            android:contentDescription="@string/up"
+            android:src="@drawable/ic_up" />
+
+        <ImageButton
+            android:id="@+id/tool_home"
+            style="@style/PaneToolButton"
+            android:contentDescription="@string/home"
+            android:src="@drawable/ic_home" />
+
+        <ImageButton
+            android:id="@+id/tool_new"
+            style="@style/PaneToolButton"
+            android:contentDescription="@string/new_folder"
+            android:src="@drawable/ic_add" />
+
+        <ImageButton
+            android:id="@+id/tool_sort"
+            style="@style/PaneToolButton"
+            android:contentDescription="@string/menu_sort"
+            android:src="@drawable/ic_sort" />
+
+        <ImageButton
+            android:id="@+id/tool_more"
+            style="@style/PaneToolButton"
+            android:contentDescription="@string/more"
+            android:src="@drawable/ic_more" />
+    </LinearLayout>
+</LinearLayout>

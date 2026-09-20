@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- 关于弹窗里的信息卡片底（v5.9.39） -->
+<shape xmlns:android="http://schemas.android.com/apk/res/android"
+    android:shape="rectangle">
+    <solid android:color="@color/toolbar_bottom" />
+    <corners android:radius="10dp" />
+</shape>

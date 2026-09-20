@@ -1,0 +1,66 @@
+我的文件 / MT Style FM — 第三方组件与许可证说明
+================================================
+
+Copyright (C) 2026 xz2762862767 and contributors
+
+本仓库整体以 GNU General Public License v3.0 发布，全文见 LICENSE。
+之所以选用 GPL-3.0 而非宽松许可证，是因为仓库内嵌了一个 GPL 系（VirtualApp 衍生物）的
+Android 沙箱引擎二进制（app/libs/blackbox.jar），详见 docs/ENGINE.md。
+
+说明：下列许可证信息均以各组件上游仓库的声明为准。仓库内并未逐一分发各组件的许可证全文；
+若你发现标注有误或不完整，请提 issue，我们会尽快更正。
+
+
+一、随仓库分发的第三方二进制（app/libs/）
+-----------------------------------------
+
+| 文件 | 组件 | 许可证 |
+| --- | --- | --- |
+| blackbox.jar | BlackBox（Android 沙箱引擎，含 BlackDex 系脱壳实现） | 推测 GPL-3.0（VirtualApp 衍生物），待与上游核实，见 docs/ENGINE.md |
+| dexlib2.jar | dexlib2（smali 项目） | 见上游仓库声明 |
+| jadx-core-1.5.1.jar<br>jadx-dex-input-1.5.1.jar<br>jadx-input-api-1.5.1.jar | jadx | Apache-2.0 |
+| guava-33.3.1-android.jar<br>failureaccess-1.0.2.jar<br>error_prone_annotations-2.27.0.jar | Google Guava 及其附属 | Apache-2.0 |
+| gson-2.11.0.jar | Gson | Apache-2.0 |
+| slf4j-api-2.0.16.jar<br>slf4j-nop-2.0.16.jar | SLF4J | MIT（jar 内已带 LICENSE） |
+| apksig-8.2.0.jar | apksig（Android SDK Build Tools） | Apache-2.0 |
+
+### 原生库（app/src/main/jniLibs/arm64-v8a/）
+
+这些 .so 是「免 Root 脱壳 / 沙箱」路径上被调用的原生组件：
+
+| 文件 | 大小 | 推测来源 | 许可证 |
+| --- | --- | --- | --- |
+| libblackdex.so | 956,936 B | BlackDex 系（CodingGay/BlackDex 一脉） | 待核实 |
+| libblackdex_d.so | 313,480 B | BlackDex 系 | 待核实 |
+| libcdumpdex.so | 5,336 B | 第三方 dex dump 组件 | 待核实 |
+| libdump.so | 656,056 B | 第三方 dex dump 组件 | 待核实 |
+| libgodump.so | 22,408 B | 第三方 dex dump 组件（godump 一脉） | 待核实 |
+| libxp_godump.so | 18,352 B | 第三方 dex dump 组件（XP/godump 一脉） | 待核实 |
+
+> ⚠️ 待办：上表的来源与许可证尚未逐一核对（整理本仓库时环境无联网检索能力）。
+> 公开发布前请确认每个原生库的上游项目与其许可证；若无法确认，建议从开源版本中
+> 移除对应功能与二进制，避免许可证风险。
+
+二、构建期依赖（未随仓库分发，由 SDK / 本地 Maven 仓库提供）
+-----------------------------------------------------------
+
+| 组件 | 许可证 |
+| --- | --- |
+| AndroidX appcompat / drawerlayout / core / annotation | Apache-2.0 |
+| Android Gradle Plugin | Apache-2.0 |
+
+三、仓库内的其他二进制资源
+---------------------------
+
+| 文件 | 说明 |
+| --- | --- |
+| app/src/main/assets/expiry_guard.dex | 本项目自有的到期校验辅助 dex，随源码以 GPL-3.0 发布 |
+| app/src/main/assets/{vm.jar, junit.jar, empty.jar} | 本项目运行时用到的辅助 jar，随源码以 GPL-3.0 发布 |
+| app/src/main/assets/inject.keystore | 本项目自有的演示用密钥库（非个人/生产密钥），随源码以 GPL-3.0 发布 |
+| app/src/main/java/top/niunaijun/blackbox/R.java | 为引擎资源引用而生成，属引擎衍生代码，随整体以 GPL-3.0 发布 |
+
+四、商标
+--------
+
+「MT 管理器」等名称、商标归其各自权利人所有。本项目与之无隶属或合作关系，
+文档中出现的相关表述仅为描述界面风格之用。

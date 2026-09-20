@@ -1,0 +1,404 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" android:maxSdkVersion="32" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" android:maxSdkVersion="29" />
+    <uses-permission android:name="android.permission.MANAGE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.REQUEST_INSTALL_PACKAGES" />
+    <uses-permission android:name="android.permission.QUERY_ALL_PACKAGES"
+        tools:ignore="QueryAllPackagesPermission" />
+    <uses-permission android:name="android.permission.INSTALL_PACKAGES"
+        tools:ignore="ProtectedPermissions" />
+
+    <!-- Android 11+ 包可见性：部分 ROM/系统会忽略 QUERY_ALL_PACKAGES，
+         这里再显式声明「需要看到有启动图标的应用」，保证本机应用列表尽量完整 -->
+    <queries>
+        <intent>
+            <action android:name="android.intent.action.MAIN" />
+            <category android:name="android.intent.category.LAUNCHER" />
+        </intent>
+        <intent>
+            <action android:name="android.intent.action.VIEW" />
+            <data android:mimeType="application/vnd.android.package-archive" />
+        </intent>
+    </queries>
+
+    <application
+        android:name=".FmApp"
+        android:allowBackup="true"
+        android:icon="@drawable/ic_launcher"
+        android:label="@string/app_name"
+        android:largeHeap="true"
+        android:extractNativeLibs="true"
+        android:supportsRtl="false"
+        android:theme="@style/AppTheme">
+        <activity
+            android:name=".MainActivity"
+            android:configChanges="orientation|screenSize|keyboardHidden|screenLayout"
+            android:exported="false"
+            android:launchMode="singleTop" />
+
+        <!-- 桌面图标：设置里可显示/隐藏（隐藏后不影响已运行实例与最近任务） -->
+        <activity-alias
+            android:name="com.mtstyle.fm.LauncherAlias"
+            android:enabled="true"
+            android:exported="true"
+            android:icon="@drawable/ic_launcher"
+            android:label="@string/app_name"
+            android:targetActivity=".MainActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity-alias>
+
+        <activity
+            android:name=".SettingsActivity"
+            android:configChanges="orientation|screenSize|keyboardHidden|screenLayout"
+            android:exported="false"
+            android:label="@string/settings_title" />
+
+        <activity
+            android:name=".AppDetailActivity"
+            android:exported="false"
+            android:label="@string/apk_detail_title" />
+
+        <activity
+            android:name=".DumpActivity"
+            android:configChanges="orientation|screenSize|keyboardHidden|screenLayout"
+            android:exported="false"
+            android:label="@string/dump_title" />
+
+        <activity
+            android:name=".ExpiryInjectActivity"
+            android:configChanges="orientation|screenSize|keyboardHidden|screenLayout"
+            android:exported="false"
+            android:label="@string/expiry_title" />
+
+        <activity
+            android:name=".TrashActivity"
+            android:exported="false"
+            android:label="@string/trash_title" />
+
+        <activity
+            android:name=".ArchiveActivity"
+            android:label="@string/archive_title"
+            android:theme="@style/AppTheme" />
+
+        <activity
+            android:name=".ImageViewerActivity"
+            android:configChanges="orientation|screenSize|keyboardHidden|screenLayout"
+            android:exported="false"
+            android:label="@string/image_view"
+            android:theme="@style/ImageViewerTheme" />
+
+        <activity
+            android:name=".AppListActivity"
+            android:exported="false"
+            android:label="@string/apps_title" />
+
+        <activity
+            android:name=".TextEditorActivity"
+            android:configChanges="orientation|screenSize|keyboardHidden|screenLayout"
+            android:exported="false"
+            android:label="@string/editor_title"
+            android:windowSoftInputMode="adjustResize" />
+
+        <activity
+            android:name=".ActivityLogActivity"
+            android:exported="false"
+            android:label="@string/record_title" />
+
+        <activity
+            android:name=".ApkAnalysisActivity"
+            android:exported="false"
+            android:label="@string/analysis_title" />
+
+        <activity
+            android:name=".XmlEditorActivity"
+            android:configChanges="orientation|screenSize|keyboardHidden|screenLayout"
+            android:exported="false"
+            android:label="@string/analysis_xml"
+            android:windowSoftInputMode="adjustResize" />
+
+        <activity
+            android:name=".HexViewerActivity"
+            android:configChanges="orientation|screenSize|keyboardHidden|screenLayout"
+            android:exported="false"
+            android:label="@string/hex_name" />
+
+        <activity
+            android:name=".ArscActivity"
+            android:configChanges="orientation|screenSize|keyboardHidden|screenLayout"
+            android:exported="false"
+            android:label="@string/res_title"
+            android:windowSoftInputMode="adjustResize" />
+
+        <activity
+            android:name=".DexActivity"
+            android:configChanges="orientation|screenSize|keyboardHidden|screenLayout"
+            android:exported="false"
+            android:label="@string/dex_title"
+            android:windowSoftInputMode="adjustResize" />
+
+        <activity
+            android:name=".ClassActivity"
+            android:configChanges="orientation|screenSize|keyboardHidden|screenLayout"
+            android:exported="false"
+            android:label="@string/dex_class_title"
+            android:windowSoftInputMode="adjustResize" />
+
+        <activity
+            android:name=".SmaliActivity"
+            android:configChanges="orientation|screenSize|keyboardHidden|screenLayout"
+            android:exported="false"
+            android:label="@string/dex_smali_title"
+            android:windowSoftInputMode="adjustResize" />
+
+        <service
+            android:name=".ActivityTrackService"
+            android:exported="true"
+            android:label="@string/accessibility_label"
+            android:permission="android.permission.BIND_ACCESSIBILITY_SERVICE">
+            <intent-filter>
+                <action android:name="android.accessibilityservice.AccessibilityService" />
+            </intent-filter>
+            <meta-data
+                android:name="android.accessibilityservice"
+                android:resource="@xml/accessibility_service_config" />
+        </service>
+
+        <!-- 「加固 APK」自动化：自动操作加固工具的界面（选择文件 → 开始加固） -->
+        <service
+            android:name=".HardenAutoService"
+            android:exported="true"
+            android:label="@string/harden_auto_label"
+            android:permission="android.permission.BIND_ACCESSIBILITY_SERVICE">
+            <intent-filter>
+                <action android:name="android.accessibilityservice.AccessibilityService" />
+            </intent-filter>
+            <meta-data
+                android:name="android.accessibilityservice"
+                android:resource="@xml/harden_auto_config" />
+        </service>
+
+        <provider
+            android:name="androidx.core.content.FileProvider"
+            android:authorities="${applicationId}.fileprovider"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/file_paths" />
+        </provider>
+
+        <!-- ===== 内嵌 BlackBox 脱壳引擎（v5.9）：宿主代理组件，沙箱应用运行/脱壳用 ===== -->
+        <!-- authorities/进程名由运行时代码按 getPackageName() 拼接，${applicationId} 构建时替换 -->
+        <activity android:theme="@android:style/Theme.Translucent.NoTitleBar" android:name="top.niunaijun.blackbox.proxy.ProxyActivity$P0" android:exported="true" android:process=":p0" android:taskAffinity="top.niunaijun.blackbox.task_affinity" android:configChanges="mcc|mnc|locale|touchscreen|keyboard|keyboardHidden|navigation|orientation|screenLayout|uiMode|screenSize|smallestScreenSize|fontScale" />
+        <activity android:theme="@android:style/Theme.Translucent.NoTitleBar" android:name="top.niunaijun.blackbox.proxy.ProxyActivity$P1" android:exported="true" android:process=":p1" android:taskAffinity="top.niunaijun.blackbox.task_affinity" android:configChanges="mcc|mnc|locale|touchscreen|keyboard|keyboardHidden|navigation|orientation|screenLayout|uiMode|screenSize|smallestScreenSize|fontScale" />
+        <activity android:theme="@android:style/Theme.Translucent.NoTitleBar" android:name="top.niunaijun.blackbox.proxy.ProxyActivity$P2" android:exported="true" android:process=":p2" android:taskAffinity="top.niunaijun.blackbox.task_affinity" android:configChanges="mcc|mnc|locale|touchscreen|keyboard|keyboardHidden|navigation|orientation|screenLayout|uiMode|screenSize|smallestScreenSize|fontScale" />
+        <activity android:theme="@android:style/Theme.Translucent.NoTitleBar" android:name="top.niunaijun.blackbox.proxy.ProxyActivity$P3" android:exported="true" android:process=":p3" android:taskAffinity="top.niunaijun.blackbox.task_affinity" android:configChanges="mcc|mnc|locale|touchscreen|keyboard|keyboardHidden|navigation|orientation|screenLayout|uiMode|screenSize|smallestScreenSize|fontScale" />
+        <activity android:theme="@android:style/Theme.Translucent.NoTitleBar" android:name="top.niunaijun.blackbox.proxy.ProxyActivity$P4" android:exported="true" android:process=":p4" android:taskAffinity="top.niunaijun.blackbox.task_affinity" android:configChanges="mcc|mnc|locale|touchscreen|keyboard|keyboardHidden|navigation|orientation|screenLayout|uiMode|screenSize|smallestScreenSize|fontScale" />
+        <activity android:theme="@android:style/Theme.Translucent.NoTitleBar" android:name="top.niunaijun.blackbox.proxy.ProxyActivity$P5" android:exported="true" android:process=":p5" android:taskAffinity="top.niunaijun.blackbox.task_affinity" android:configChanges="mcc|mnc|locale|touchscreen|keyboard|keyboardHidden|navigation|orientation|screenLayout|uiMode|screenSize|smallestScreenSize|fontScale" />
+        <activity android:theme="@android:style/Theme.Translucent.NoTitleBar" android:name="top.niunaijun.blackbox.proxy.ProxyActivity$P6" android:exported="true" android:process=":p6" android:taskAffinity="top.niunaijun.blackbox.task_affinity" android:configChanges="mcc|mnc|locale|touchscreen|keyboard|keyboardHidden|navigation|orientation|screenLayout|uiMode|screenSize|smallestScreenSize|fontScale" />
+        <activity android:theme="@android:style/Theme.Translucent.NoTitleBar" android:name="top.niunaijun.blackbox.proxy.ProxyActivity$P7" android:exported="true" android:process=":p7" android:taskAffinity="top.niunaijun.blackbox.task_affinity" android:configChanges="mcc|mnc|locale|touchscreen|keyboard|keyboardHidden|navigation|orientation|screenLayout|uiMode|screenSize|smallestScreenSize|fontScale" />
+        <activity android:theme="@android:style/Theme.Translucent.NoTitleBar" android:name="top.niunaijun.blackbox.proxy.ProxyActivity$P8" android:exported="true" android:process=":p8" android:taskAffinity="top.niunaijun.blackbox.task_affinity" android:configChanges="mcc|mnc|locale|touchscreen|keyboard|keyboardHidden|navigation|orientation|screenLayout|uiMode|screenSize|smallestScreenSize|fontScale" />
+        <activity android:theme="@android:style/Theme.Translucent.NoTitleBar" android:name="top.niunaijun.blackbox.proxy.ProxyActivity$P9" android:exported="true" android:process=":p9" android:taskAffinity="top.niunaijun.blackbox.task_affinity" android:configChanges="mcc|mnc|locale|touchscreen|keyboard|keyboardHidden|navigation|orientation|screenLayout|uiMode|screenSize|smallestScreenSize|fontScale" />
+        <activity android:theme="@android:style/Theme.Translucent.NoTitleBar" android:name="top.niunaijun.blackbox.proxy.ProxyActivity$P10" android:exported="true" android:process=":p10" android:taskAffinity="top.niunaijun.blackbox.task_affinity" android:configChanges="mcc|mnc|locale|touchscreen|keyboard|keyboardHidden|navigation|orientation|screenLayout|uiMode|screenSize|smallestScreenSize|fontScale" />
+        <activity android:theme="@android:style/Theme.Translucent.NoTitleBar" android:name="top.niunaijun.blackbox.proxy.ProxyActivity$P11" android:exported="true" android:process=":p11" android:taskAffinity="top.niunaijun.blackbox.task_affinity" android:configChanges="mcc|mnc|locale|touchscreen|keyboard|keyboardHidden|navigation|orientation|screenLayout|uiMode|screenSize|smallestScreenSize|fontScale" />
+        <activity android:theme="@android:style/Theme.Translucent.NoTitleBar" android:name="top.niunaijun.blackbox.proxy.ProxyActivity$P12" android:exported="true" android:process=":p12" android:taskAffinity="top.niunaijun.blackbox.task_affinity" android:configChanges="mcc|mnc|locale|touchscreen|keyboard|keyboardHidden|navigation|orientation|screenLayout|uiMode|screenSize|smallestScreenSize|fontScale" />
+        <activity android:theme="@android:style/Theme.Translucent.NoTitleBar" android:name="top.niunaijun.blackbox.proxy.ProxyActivity$P13" android:exported="true" android:process=":p13" android:taskAffinity="top.niunaijun.blackbox.task_affinity" android:configChanges="mcc|mnc|locale|touchscreen|keyboard|keyboardHidden|navigation|orientation|screenLayout|uiMode|screenSize|smallestScreenSize|fontScale" />
+        <activity android:theme="@android:style/Theme.Translucent.NoTitleBar" android:name="top.niunaijun.blackbox.proxy.ProxyActivity$P14" android:exported="true" android:process=":p14" android:taskAffinity="top.niunaijun.blackbox.task_affinity" android:configChanges="mcc|mnc|locale|touchscreen|keyboard|keyboardHidden|navigation|orientation|screenLayout|uiMode|screenSize|smallestScreenSize|fontScale" />
+        <activity android:theme="@android:style/Theme.Translucent.NoTitleBar" android:name="top.niunaijun.blackbox.proxy.ProxyActivity$P15" android:exported="true" android:process=":p15" android:taskAffinity="top.niunaijun.blackbox.task_affinity" android:configChanges="mcc|mnc|locale|touchscreen|keyboard|keyboardHidden|navigation|orientation|screenLayout|uiMode|screenSize|smallestScreenSize|fontScale" />
+        <activity android:theme="@android:style/Theme.Translucent.NoTitleBar" android:name="top.niunaijun.blackbox.proxy.ProxyActivity$P16" android:exported="true" android:process=":p16" android:taskAffinity="top.niunaijun.blackbox.task_affinity" android:configChanges="mcc|mnc|locale|touchscreen|keyboard|keyboardHidden|navigation|orientation|screenLayout|uiMode|screenSize|smallestScreenSize|fontScale" />
+        <activity android:theme="@android:style/Theme.Translucent.NoTitleBar" android:name="top.niunaijun.blackbox.proxy.ProxyActivity$P17" android:exported="true" android:process=":p17" android:taskAffinity="top.niunaijun.blackbox.task_affinity" android:configChanges="mcc|mnc|locale|touchscreen|keyboard|keyboardHidden|navigation|orientation|screenLayout|uiMode|screenSize|smallestScreenSize|fontScale" />
+        <activity android:theme="@android:style/Theme.Translucent.NoTitleBar" android:name="top.niunaijun.blackbox.proxy.ProxyActivity$P18" android:exported="true" android:process=":p18" android:taskAffinity="top.niunaijun.blackbox.task_affinity" android:configChanges="mcc|mnc|locale|touchscreen|keyboard|keyboardHidden|navigation|orientation|screenLayout|uiMode|screenSize|smallestScreenSize|fontScale" />
+        <activity android:theme="@android:style/Theme.Translucent.NoTitleBar" android:name="top.niunaijun.blackbox.proxy.ProxyActivity$P19" android:exported="true" android:process=":p19" android:taskAffinity="top.niunaijun.blackbox.task_affinity" android:configChanges="mcc|mnc|locale|touchscreen|keyboard|keyboardHidden|navigation|orientation|screenLayout|uiMode|screenSize|smallestScreenSize|fontScale" />
+        <activity android:theme="@android:style/Theme.Translucent.NoTitleBar" android:name="top.niunaijun.blackbox.proxy.ProxyActivity$P20" android:exported="true" android:process=":p20" android:taskAffinity="top.niunaijun.blackbox.task_affinity" android:configChanges="mcc|mnc|locale|touchscreen|keyboard|keyboardHidden|navigation|orientation|screenLayout|uiMode|screenSize|smallestScreenSize|fontScale" />
+        <activity android:theme="@android:style/Theme.Translucent.NoTitleBar" android:name="top.niunaijun.blackbox.proxy.ProxyActivity$P21" android:exported="true" android:process=":p21" android:taskAffinity="top.niunaijun.blackbox.task_affinity" android:configChanges="mcc|mnc|locale|touchscreen|keyboard|keyboardHidden|navigation|orientation|screenLayout|uiMode|screenSize|smallestScreenSize|fontScale" />
+        <activity android:theme="@android:style/Theme.Translucent.NoTitleBar" android:name="top.niunaijun.blackbox.proxy.ProxyActivity$P22" android:exported="true" android:process=":p22" android:taskAffinity="top.niunaijun.blackbox.task_affinity" android:configChanges="mcc|mnc|locale|touchscreen|keyboard|keyboardHidden|navigation|orientation|screenLayout|uiMode|screenSize|smallestScreenSize|fontScale" />
+        <activity android:theme="@android:style/Theme.Translucent.NoTitleBar" android:name="top.niunaijun.blackbox.proxy.ProxyActivity$P23" android:exported="true" android:process=":p23" android:taskAffinity="top.niunaijun.blackbox.task_affinity" android:configChanges="mcc|mnc|locale|touchscreen|keyboard|keyboardHidden|navigation|orientation|screenLayout|uiMode|screenSize|smallestScreenSize|fontScale" />
+        <activity android:theme="@android:style/Theme.Translucent.NoTitleBar" android:name="top.niunaijun.blackbox.proxy.ProxyActivity$P24" android:exported="true" android:process=":p24" android:taskAffinity="top.niunaijun.blackbox.task_affinity" android:configChanges="mcc|mnc|locale|touchscreen|keyboard|keyboardHidden|navigation|orientation|screenLayout|uiMode|screenSize|smallestScreenSize|fontScale" />
+        <activity android:theme="@android:style/Theme.Translucent.NoTitleBar" android:name="top.niunaijun.blackbox.proxy.ProxyActivity$P25" android:exported="true" android:process=":p25" android:taskAffinity="top.niunaijun.blackbox.task_affinity" android:configChanges="mcc|mnc|locale|touchscreen|keyboard|keyboardHidden|navigation|orientation|screenLayout|uiMode|screenSize|smallestScreenSize|fontScale" />
+        <activity android:theme="@android:style/Theme.Translucent.NoTitleBar" android:name="top.niunaijun.blackbox.proxy.ProxyActivity$P26" android:exported="true" android:process=":p26" android:taskAffinity="top.niunaijun.blackbox.task_affinity" android:configChanges="mcc|mnc|locale|touchscreen|keyboard|keyboardHidden|navigation|orientation|screenLayout|uiMode|screenSize|smallestScreenSize|fontScale" />
+        <activity android:theme="@android:style/Theme.Translucent.NoTitleBar" android:name="top.niunaijun.blackbox.proxy.ProxyActivity$P27" android:exported="true" android:process=":p27" android:taskAffinity="top.niunaijun.blackbox.task_affinity" android:configChanges="mcc|mnc|locale|touchscreen|keyboard|keyboardHidden|navigation|orientation|screenLayout|uiMode|screenSize|smallestScreenSize|fontScale" />
+        <activity android:theme="@android:style/Theme.Translucent.NoTitleBar" android:name="top.niunaijun.blackbox.proxy.ProxyActivity$P28" android:exported="true" android:process=":p28" android:taskAffinity="top.niunaijun.blackbox.task_affinity" android:configChanges="mcc|mnc|locale|touchscreen|keyboard|keyboardHidden|navigation|orientation|screenLayout|uiMode|screenSize|smallestScreenSize|fontScale" />
+        <activity android:theme="@android:style/Theme.Translucent.NoTitleBar" android:name="top.niunaijun.blackbox.proxy.ProxyActivity$P29" android:exported="true" android:process=":p29" android:taskAffinity="top.niunaijun.blackbox.task_affinity" android:configChanges="mcc|mnc|locale|touchscreen|keyboard|keyboardHidden|navigation|orientation|screenLayout|uiMode|screenSize|smallestScreenSize|fontScale" />
+        <activity android:theme="@android:style/Theme.Translucent.NoTitleBar" android:name="top.niunaijun.blackbox.proxy.ProxyActivity$P30" android:exported="true" android:process=":p30" android:taskAffinity="top.niunaijun.blackbox.task_affinity" android:configChanges="mcc|mnc|locale|touchscreen|keyboard|keyboardHidden|navigation|orientation|screenLayout|uiMode|screenSize|smallestScreenSize|fontScale" />
+        <activity android:theme="@android:style/Theme.Translucent.NoTitleBar" android:name="top.niunaijun.blackbox.proxy.ProxyActivity$P31" android:exported="true" android:process=":p31" android:taskAffinity="top.niunaijun.blackbox.task_affinity" android:configChanges="mcc|mnc|locale|touchscreen|keyboard|keyboardHidden|navigation|orientation|screenLayout|uiMode|screenSize|smallestScreenSize|fontScale" />
+        <activity android:theme="@android:style/Theme.Translucent.NoTitleBar" android:name="top.niunaijun.blackbox.proxy.ProxyActivity$P32" android:exported="true" android:process=":p32" android:taskAffinity="top.niunaijun.blackbox.task_affinity" android:configChanges="mcc|mnc|locale|touchscreen|keyboard|keyboardHidden|navigation|orientation|screenLayout|uiMode|screenSize|smallestScreenSize|fontScale" />
+        <activity android:theme="@android:style/Theme.Translucent.NoTitleBar" android:name="top.niunaijun.blackbox.proxy.ProxyActivity$P33" android:exported="true" android:process=":p33" android:taskAffinity="top.niunaijun.blackbox.task_affinity" android:configChanges="mcc|mnc|locale|touchscreen|keyboard|keyboardHidden|navigation|orientation|screenLayout|uiMode|screenSize|smallestScreenSize|fontScale" />
+        <activity android:theme="@android:style/Theme.Translucent.NoTitleBar" android:name="top.niunaijun.blackbox.proxy.ProxyActivity$P34" android:exported="true" android:process=":p34" android:taskAffinity="top.niunaijun.blackbox.task_affinity" android:configChanges="mcc|mnc|locale|touchscreen|keyboard|keyboardHidden|navigation|orientation|screenLayout|uiMode|screenSize|smallestScreenSize|fontScale" />
+        <activity android:theme="@android:style/Theme.Translucent.NoTitleBar" android:name="top.niunaijun.blackbox.proxy.ProxyActivity$P35" android:exported="true" android:process=":p35" android:taskAffinity="top.niunaijun.blackbox.task_affinity" android:configChanges="mcc|mnc|locale|touchscreen|keyboard|keyboardHidden|navigation|orientation|screenLayout|uiMode|screenSize|smallestScreenSize|fontScale" />
+        <activity android:theme="@android:style/Theme.Translucent.NoTitleBar" android:name="top.niunaijun.blackbox.proxy.ProxyActivity$P36" android:exported="true" android:process=":p36" android:taskAffinity="top.niunaijun.blackbox.task_affinity" android:configChanges="mcc|mnc|locale|touchscreen|keyboard|keyboardHidden|navigation|orientation|screenLayout|uiMode|screenSize|smallestScreenSize|fontScale" />
+        <activity android:theme="@android:style/Theme.Translucent.NoTitleBar" android:name="top.niunaijun.blackbox.proxy.ProxyActivity$P37" android:exported="true" android:process=":p37" android:taskAffinity="top.niunaijun.blackbox.task_affinity" android:configChanges="mcc|mnc|locale|touchscreen|keyboard|keyboardHidden|navigation|orientation|screenLayout|uiMode|screenSize|smallestScreenSize|fontScale" />
+        <activity android:theme="@android:style/Theme.Translucent.NoTitleBar" android:name="top.niunaijun.blackbox.proxy.ProxyActivity$P38" android:exported="true" android:process=":p38" android:taskAffinity="top.niunaijun.blackbox.task_affinity" android:configChanges="mcc|mnc|locale|touchscreen|keyboard|keyboardHidden|navigation|orientation|screenLayout|uiMode|screenSize|smallestScreenSize|fontScale" />
+        <activity android:theme="@android:style/Theme.Translucent.NoTitleBar" android:name="top.niunaijun.blackbox.proxy.ProxyActivity$P39" android:exported="true" android:process=":p39" android:taskAffinity="top.niunaijun.blackbox.task_affinity" android:configChanges="mcc|mnc|locale|touchscreen|keyboard|keyboardHidden|navigation|orientation|screenLayout|uiMode|screenSize|smallestScreenSize|fontScale" />
+        <activity android:theme="@android:style/Theme.Translucent.NoTitleBar" android:name="top.niunaijun.blackbox.proxy.ProxyActivity$P40" android:exported="true" android:process=":p40" android:taskAffinity="top.niunaijun.blackbox.task_affinity" android:configChanges="mcc|mnc|locale|touchscreen|keyboard|keyboardHidden|navigation|orientation|screenLayout|uiMode|screenSize|smallestScreenSize|fontScale" />
+        <activity android:theme="@android:style/Theme.Translucent.NoTitleBar" android:name="top.niunaijun.blackbox.proxy.ProxyActivity$P41" android:exported="true" android:process=":p41" android:taskAffinity="top.niunaijun.blackbox.task_affinity" android:configChanges="mcc|mnc|locale|touchscreen|keyboard|keyboardHidden|navigation|orientation|screenLayout|uiMode|screenSize|smallestScreenSize|fontScale" />
+        <activity android:theme="@android:style/Theme.Translucent.NoTitleBar" android:name="top.niunaijun.blackbox.proxy.ProxyActivity$P42" android:exported="true" android:process=":p42" android:taskAffinity="top.niunaijun.blackbox.task_affinity" android:configChanges="mcc|mnc|locale|touchscreen|keyboard|keyboardHidden|navigation|orientation|screenLayout|uiMode|screenSize|smallestScreenSize|fontScale" />
+        <activity android:theme="@android:style/Theme.Translucent.NoTitleBar" android:name="top.niunaijun.blackbox.proxy.ProxyActivity$P43" android:exported="true" android:process=":p43" android:taskAffinity="top.niunaijun.blackbox.task_affinity" android:configChanges="mcc|mnc|locale|touchscreen|keyboard|keyboardHidden|navigation|orientation|screenLayout|uiMode|screenSize|smallestScreenSize|fontScale" />
+        <activity android:theme="@android:style/Theme.Translucent.NoTitleBar" android:name="top.niunaijun.blackbox.proxy.ProxyActivity$P44" android:exported="true" android:process=":p44" android:taskAffinity="top.niunaijun.blackbox.task_affinity" android:configChanges="mcc|mnc|locale|touchscreen|keyboard|keyboardHidden|navigation|orientation|screenLayout|uiMode|screenSize|smallestScreenSize|fontScale" />
+        <activity android:theme="@android:style/Theme.Translucent.NoTitleBar" android:name="top.niunaijun.blackbox.proxy.ProxyActivity$P45" android:exported="true" android:process=":p45" android:taskAffinity="top.niunaijun.blackbox.task_affinity" android:configChanges="mcc|mnc|locale|touchscreen|keyboard|keyboardHidden|navigation|orientation|screenLayout|uiMode|screenSize|smallestScreenSize|fontScale" />
+        <activity android:theme="@android:style/Theme.Translucent.NoTitleBar" android:name="top.niunaijun.blackbox.proxy.ProxyActivity$P46" android:exported="true" android:process=":p46" android:taskAffinity="top.niunaijun.blackbox.task_affinity" android:configChanges="mcc|mnc|locale|touchscreen|keyboard|keyboardHidden|navigation|orientation|screenLayout|uiMode|screenSize|smallestScreenSize|fontScale" />
+        <activity android:theme="@android:style/Theme.Translucent.NoTitleBar" android:name="top.niunaijun.blackbox.proxy.ProxyActivity$P47" android:exported="true" android:process=":p47" android:taskAffinity="top.niunaijun.blackbox.task_affinity" android:configChanges="mcc|mnc|locale|touchscreen|keyboard|keyboardHidden|navigation|orientation|screenLayout|uiMode|screenSize|smallestScreenSize|fontScale" />
+        <activity android:theme="@android:style/Theme.Translucent.NoTitleBar" android:name="top.niunaijun.blackbox.proxy.ProxyActivity$P48" android:exported="true" android:process=":p48" android:taskAffinity="top.niunaijun.blackbox.task_affinity" android:configChanges="mcc|mnc|locale|touchscreen|keyboard|keyboardHidden|navigation|orientation|screenLayout|uiMode|screenSize|smallestScreenSize|fontScale" />
+        <activity android:theme="@android:style/Theme.Translucent.NoTitleBar" android:name="top.niunaijun.blackbox.proxy.ProxyActivity$P49" android:exported="true" android:process=":p49" android:taskAffinity="top.niunaijun.blackbox.task_affinity" android:configChanges="mcc|mnc|locale|touchscreen|keyboard|keyboardHidden|navigation|orientation|screenLayout|uiMode|screenSize|smallestScreenSize|fontScale" />
+        <activity android:theme="@android:style/Theme.Translucent.NoTitleBar" android:name="top.niunaijun.blackbox.proxy.ProxyActivity$P50" android:exported="true" android:process=":p50" android:taskAffinity="top.niunaijun.blackbox.task_affinity" android:configChanges="mcc|mnc|locale|touchscreen|keyboard|keyboardHidden|navigation|orientation|screenLayout|uiMode|screenSize|smallestScreenSize|fontScale" />
+        <activity android:theme="@android:style/Theme.Translucent.NoTitleBar" android:name="top.niunaijun.blackbox.proxy.ProxyActivity$P51" android:exported="true" android:process=":p51" android:taskAffinity="top.niunaijun.blackbox.task_affinity" android:configChanges="mcc|mnc|locale|touchscreen|keyboard|keyboardHidden|navigation|orientation|screenLayout|uiMode|screenSize|smallestScreenSize|fontScale" />
+        <activity android:theme="@android:style/Theme.Translucent.NoTitleBar" android:name="top.niunaijun.blackbox.proxy.ProxyActivity$P52" android:exported="true" android:process=":p52" android:taskAffinity="top.niunaijun.blackbox.task_affinity" android:configChanges="mcc|mnc|locale|touchscreen|keyboard|keyboardHidden|navigation|orientation|screenLayout|uiMode|screenSize|smallestScreenSize|fontScale" />
+        <activity android:theme="@android:style/Theme.Translucent.NoTitleBar" android:name="top.niunaijun.blackbox.proxy.ProxyActivity$P53" android:exported="true" android:process=":p53" android:taskAffinity="top.niunaijun.blackbox.task_affinity" android:configChanges="mcc|mnc|locale|touchscreen|keyboard|keyboardHidden|navigation|orientation|screenLayout|uiMode|screenSize|smallestScreenSize|fontScale" />
+        <activity android:theme="@android:style/Theme.Translucent.NoTitleBar" android:name="top.niunaijun.blackbox.proxy.ProxyActivity$P54" android:exported="true" android:process=":p54" android:taskAffinity="top.niunaijun.blackbox.task_affinity" android:configChanges="mcc|mnc|locale|touchscreen|keyboard|keyboardHidden|navigation|orientation|screenLayout|uiMode|screenSize|smallestScreenSize|fontScale" />
+        <activity android:theme="@android:style/Theme.Translucent.NoTitleBar" android:name="top.niunaijun.blackbox.proxy.ProxyActivity$P55" android:exported="true" android:process=":p55" android:taskAffinity="top.niunaijun.blackbox.task_affinity" android:configChanges="mcc|mnc|locale|touchscreen|keyboard|keyboardHidden|navigation|orientation|screenLayout|uiMode|screenSize|smallestScreenSize|fontScale" />
+        <activity android:theme="@android:style/Theme.Translucent.NoTitleBar" android:name="top.niunaijun.blackbox.proxy.ProxyActivity$P56" android:exported="true" android:process=":p56" android:taskAffinity="top.niunaijun.blackbox.task_affinity" android:configChanges="mcc|mnc|locale|touchscreen|keyboard|keyboardHidden|navigation|orientation|screenLayout|uiMode|screenSize|smallestScreenSize|fontScale" />
+        <activity android:theme="@android:style/Theme.Translucent.NoTitleBar" android:name="top.niunaijun.blackbox.proxy.ProxyActivity$P57" android:exported="true" android:process=":p57" android:taskAffinity="top.niunaijun.blackbox.task_affinity" android:configChanges="mcc|mnc|locale|touchscreen|keyboard|keyboardHidden|navigation|orientation|screenLayout|uiMode|screenSize|smallestScreenSize|fontScale" />
+        <activity android:theme="@android:style/Theme.Translucent.NoTitleBar" android:name="top.niunaijun.blackbox.proxy.ProxyActivity$P58" android:exported="true" android:process=":p58" android:taskAffinity="top.niunaijun.blackbox.task_affinity" android:configChanges="mcc|mnc|locale|touchscreen|keyboard|keyboardHidden|navigation|orientation|screenLayout|uiMode|screenSize|smallestScreenSize|fontScale" />
+        <activity android:theme="@android:style/Theme.Translucent.NoTitleBar" android:name="top.niunaijun.blackbox.proxy.ProxyActivity$P59" android:exported="true" android:process=":p59" android:taskAffinity="top.niunaijun.blackbox.task_affinity" android:configChanges="mcc|mnc|locale|touchscreen|keyboard|keyboardHidden|navigation|orientation|screenLayout|uiMode|screenSize|smallestScreenSize|fontScale" />
+        <activity android:theme="@android:style/Theme.Translucent.NoTitleBar" android:name="top.niunaijun.blackbox.proxy.ProxyActivity$P60" android:exported="true" android:process=":p60" android:taskAffinity="top.niunaijun.blackbox.task_affinity" android:configChanges="mcc|mnc|locale|touchscreen|keyboard|keyboardHidden|navigation|orientation|screenLayout|uiMode|screenSize|smallestScreenSize|fontScale" />
+        <activity android:theme="@android:style/Theme.Translucent.NoTitleBar" android:name="top.niunaijun.blackbox.proxy.ProxyActivity$P61" android:exported="true" android:process=":p61" android:taskAffinity="top.niunaijun.blackbox.task_affinity" android:configChanges="mcc|mnc|locale|touchscreen|keyboard|keyboardHidden|navigation|orientation|screenLayout|uiMode|screenSize|smallestScreenSize|fontScale" />
+        <activity android:theme="@android:style/Theme.Translucent.NoTitleBar" android:name="top.niunaijun.blackbox.proxy.ProxyActivity$P62" android:exported="true" android:process=":p62" android:taskAffinity="top.niunaijun.blackbox.task_affinity" android:configChanges="mcc|mnc|locale|touchscreen|keyboard|keyboardHidden|navigation|orientation|screenLayout|uiMode|screenSize|smallestScreenSize|fontScale" />
+        <activity android:theme="@android:style/Theme.Translucent.NoTitleBar" android:name="top.niunaijun.blackbox.proxy.ProxyActivity$P63" android:exported="true" android:process=":p63" android:taskAffinity="top.niunaijun.blackbox.task_affinity" android:configChanges="mcc|mnc|locale|touchscreen|keyboard|keyboardHidden|navigation|orientation|screenLayout|uiMode|screenSize|smallestScreenSize|fontScale" />
+        <activity android:theme="@android:style/Theme.Translucent.NoTitleBar" android:name="top.niunaijun.blackbox.proxy.ProxyActivity$P64" android:exported="true" android:process=":p64" android:taskAffinity="top.niunaijun.blackbox.task_affinity" android:configChanges="mcc|mnc|locale|touchscreen|keyboard|keyboardHidden|navigation|orientation|screenLayout|uiMode|screenSize|smallestScreenSize|fontScale" />
+        <activity android:theme="@android:style/Theme.Translucent.NoTitleBar" android:name="top.niunaijun.blackbox.proxy.ProxyActivity$P65" android:exported="true" android:process=":p65" android:taskAffinity="top.niunaijun.blackbox.task_affinity" android:configChanges="mcc|mnc|locale|touchscreen|keyboard|keyboardHidden|navigation|orientation|screenLayout|uiMode|screenSize|smallestScreenSize|fontScale" />
+        <activity android:theme="@android:style/Theme.Translucent.NoTitleBar" android:name="top.niunaijun.blackbox.proxy.ProxyActivity$P66" android:exported="true" android:process=":p66" android:taskAffinity="top.niunaijun.blackbox.task_affinity" android:configChanges="mcc|mnc|locale|touchscreen|keyboard|keyboardHidden|navigation|orientation|screenLayout|uiMode|screenSize|smallestScreenSize|fontScale" />
+        <activity android:theme="@android:style/Theme.Translucent.NoTitleBar" android:name="top.niunaijun.blackbox.proxy.ProxyActivity$P67" android:exported="true" android:process=":p67" android:taskAffinity="top.niunaijun.blackbox.task_affinity" android:configChanges="mcc|mnc|locale|touchscreen|keyboard|keyboardHidden|navigation|orientation|screenLayout|uiMode|screenSize|smallestScreenSize|fontScale" />
+        <activity android:theme="@android:style/Theme.Translucent.NoTitleBar" android:name="top.niunaijun.blackbox.proxy.ProxyActivity$P68" android:exported="true" android:process=":p68" android:taskAffinity="top.niunaijun.blackbox.task_affinity" android:configChanges="mcc|mnc|locale|touchscreen|keyboard|keyboardHidden|navigation|orientation|screenLayout|uiMode|screenSize|smallestScreenSize|fontScale" />
+        <activity android:theme="@android:style/Theme.Translucent.NoTitleBar" android:name="top.niunaijun.blackbox.proxy.ProxyActivity$P69" android:exported="true" android:process=":p69" android:taskAffinity="top.niunaijun.blackbox.task_affinity" android:configChanges="mcc|mnc|locale|touchscreen|keyboard|keyboardHidden|navigation|orientation|screenLayout|uiMode|screenSize|smallestScreenSize|fontScale" />
+        <activity android:theme="@android:style/Theme.Translucent.NoTitleBar" android:name="top.niunaijun.blackbox.proxy.ProxyActivity$P70" android:exported="true" android:process=":p70" android:taskAffinity="top.niunaijun.blackbox.task_affinity" android:configChanges="mcc|mnc|locale|touchscreen|keyboard|keyboardHidden|navigation|orientation|screenLayout|uiMode|screenSize|smallestScreenSize|fontScale" />
+        <activity android:theme="@android:style/Theme.Translucent.NoTitleBar" android:name="top.niunaijun.blackbox.proxy.ProxyActivity$P71" android:exported="true" android:process=":p71" android:taskAffinity="top.niunaijun.blackbox.task_affinity" android:configChanges="mcc|mnc|locale|touchscreen|keyboard|keyboardHidden|navigation|orientation|screenLayout|uiMode|screenSize|smallestScreenSize|fontScale" />
+        <activity android:theme="@android:style/Theme.Translucent.NoTitleBar" android:name="top.niunaijun.blackbox.proxy.ProxyActivity$P72" android:exported="true" android:process=":p72" android:taskAffinity="top.niunaijun.blackbox.task_affinity" android:configChanges="mcc|mnc|locale|touchscreen|keyboard|keyboardHidden|navigation|orientation|screenLayout|uiMode|screenSize|smallestScreenSize|fontScale" />
+        <activity android:theme="@android:style/Theme.Translucent.NoTitleBar" android:name="top.niunaijun.blackbox.proxy.ProxyActivity$P73" android:exported="true" android:process=":p73" android:taskAffinity="top.niunaijun.blackbox.task_affinity" android:configChanges="mcc|mnc|locale|touchscreen|keyboard|keyboardHidden|navigation|orientation|screenLayout|uiMode|screenSize|smallestScreenSize|fontScale" />
+        <activity android:theme="@android:style/Theme.Translucent.NoTitleBar" android:name="top.niunaijun.blackbox.proxy.ProxyActivity$P74" android:exported="true" android:process=":p74" android:taskAffinity="top.niunaijun.blackbox.task_affinity" android:configChanges="mcc|mnc|locale|touchscreen|keyboard|keyboardHidden|navigation|orientation|screenLayout|uiMode|screenSize|smallestScreenSize|fontScale" />
+        <activity android:theme="@android:style/Theme.Translucent.NoTitleBar" android:name="top.niunaijun.blackbox.proxy.ProxyActivity$P75" android:exported="true" android:process=":p75" android:taskAffinity="top.niunaijun.blackbox.task_affinity" android:configChanges="mcc|mnc|locale|touchscreen|keyboard|keyboardHidden|navigation|orientation|screenLayout|uiMode|screenSize|smallestScreenSize|fontScale" />
+        <activity android:theme="@android:style/Theme.Translucent.NoTitleBar" android:name="top.niunaijun.blackbox.proxy.ProxyActivity$P76" android:exported="true" android:process=":p76" android:taskAffinity="top.niunaijun.blackbox.task_affinity" android:configChanges="mcc|mnc|locale|touchscreen|keyboard|keyboardHidden|navigation|orientation|screenLayout|uiMode|screenSize|smallestScreenSize|fontScale" />
+        <activity android:theme="@android:style/Theme.Translucent.NoTitleBar" android:name="top.niunaijun.blackbox.proxy.ProxyActivity$P77" android:exported="true" android:process=":p77" android:taskAffinity="top.niunaijun.blackbox.task_affinity" android:configChanges="mcc|mnc|locale|touchscreen|keyboard|keyboardHidden|navigation|orientation|screenLayout|uiMode|screenSize|smallestScreenSize|fontScale" />
+        <activity android:theme="@android:style/Theme.Translucent.NoTitleBar" android:name="top.niunaijun.blackbox.proxy.ProxyActivity$P78" android:exported="true" android:process=":p78" android:taskAffinity="top.niunaijun.blackbox.task_affinity" android:configChanges="mcc|mnc|locale|touchscreen|keyboard|keyboardHidden|navigation|orientation|screenLayout|uiMode|screenSize|smallestScreenSize|fontScale" />
+        <activity android:theme="@android:style/Theme.Translucent.NoTitleBar" android:name="top.niunaijun.blackbox.proxy.ProxyActivity$P79" android:exported="true" android:process=":p79" android:taskAffinity="top.niunaijun.blackbox.task_affinity" android:configChanges="mcc|mnc|locale|touchscreen|keyboard|keyboardHidden|navigation|orientation|screenLayout|uiMode|screenSize|smallestScreenSize|fontScale" />
+        <activity android:theme="@android:style/Theme.Translucent.NoTitleBar" android:name="top.niunaijun.blackbox.proxy.ProxyActivity$P80" android:exported="true" android:process=":p80" android:taskAffinity="top.niunaijun.blackbox.task_affinity" android:configChanges="mcc|mnc|locale|touchscreen|keyboard|keyboardHidden|navigation|orientation|screenLayout|uiMode|screenSize|smallestScreenSize|fontScale" />
+        <activity android:theme="@android:style/Theme.Translucent.NoTitleBar" android:name="top.niunaijun.blackbox.proxy.ProxyActivity$P81" android:exported="true" android:process=":p81" android:taskAffinity="top.niunaijun.blackbox.task_affinity" android:configChanges="mcc|mnc|locale|touchscreen|keyboard|keyboardHidden|navigation|orientation|screenLayout|uiMode|screenSize|smallestScreenSize|fontScale" />
+        <activity android:theme="@android:style/Theme.Translucent.NoTitleBar" android:name="top.niunaijun.blackbox.proxy.ProxyActivity$P82" android:exported="true" android:process=":p82" android:taskAffinity="top.niunaijun.blackbox.task_affinity" android:configChanges="mcc|mnc|locale|touchscreen|keyboard|keyboardHidden|navigation|orientation|screenLayout|uiMode|screenSize|smallestScreenSize|fontScale" />
+        <activity android:theme="@android:style/Theme.Translucent.NoTitleBar" android:name="top.niunaijun.blackbox.proxy.ProxyActivity$P83" android:exported="true" android:process=":p83" android:taskAffinity="top.niunaijun.blackbox.task_affinity" android:configChanges="mcc|mnc|locale|touchscreen|keyboard|keyboardHidden|navigation|orientation|screenLayout|uiMode|screenSize|smallestScreenSize|fontScale" />
+        <activity android:theme="@android:style/Theme.Translucent.NoTitleBar" android:name="top.niunaijun.blackbox.proxy.ProxyActivity$P84" android:exported="true" android:process=":p84" android:taskAffinity="top.niunaijun.blackbox.task_affinity" android:configChanges="mcc|mnc|locale|touchscreen|keyboard|keyboardHidden|navigation|orientation|screenLayout|uiMode|screenSize|smallestScreenSize|fontScale" />
+        <activity android:theme="@android:style/Theme.Translucent.NoTitleBar" android:name="top.niunaijun.blackbox.proxy.ProxyActivity$P85" android:exported="true" android:process=":p85" android:taskAffinity="top.niunaijun.blackbox.task_affinity" android:configChanges="mcc|mnc|locale|touchscreen|keyboard|keyboardHidden|navigation|orientation|screenLayout|uiMode|screenSize|smallestScreenSize|fontScale" />
+        <activity android:theme="@android:style/Theme.Translucent.NoTitleBar" android:name="top.niunaijun.blackbox.proxy.ProxyActivity$P86" android:exported="true" android:process=":p86" android:taskAffinity="top.niunaijun.blackbox.task_affinity" android:configChanges="mcc|mnc|locale|touchscreen|keyboard|keyboardHidden|navigation|orientation|screenLayout|uiMode|screenSize|smallestScreenSize|fontScale" />
+        <activity android:theme="@android:style/Theme.Translucent.NoTitleBar" android:name="top.niunaijun.blackbox.proxy.ProxyActivity$P87" android:exported="true" android:process=":p87" android:taskAffinity="top.niunaijun.blackbox.task_affinity" android:configChanges="mcc|mnc|locale|touchscreen|keyboard|keyboardHidden|navigation|orientation|screenLayout|uiMode|screenSize|smallestScreenSize|fontScale" />
+        <activity android:theme="@android:style/Theme.Translucent.NoTitleBar" android:name="top.niunaijun.blackbox.proxy.ProxyActivity$P88" android:exported="true" android:process=":p88" android:taskAffinity="top.niunaijun.blackbox.task_affinity" android:configChanges="mcc|mnc|locale|touchscreen|keyboard|keyboardHidden|navigation|orientation|screenLayout|uiMode|screenSize|smallestScreenSize|fontScale" />
+        <activity android:theme="@android:style/Theme.Translucent.NoTitleBar" android:name="top.niunaijun.blackbox.proxy.ProxyActivity$P89" android:exported="true" android:process=":p89" android:taskAffinity="top.niunaijun.blackbox.task_affinity" android:configChanges="mcc|mnc|locale|touchscreen|keyboard|keyboardHidden|navigation|orientation|screenLayout|uiMode|screenSize|smallestScreenSize|fontScale" />
+        <activity android:theme="@android:style/Theme.Translucent.NoTitleBar" android:name="top.niunaijun.blackbox.proxy.ProxyActivity$P90" android:exported="true" android:process=":p90" android:taskAffinity="top.niunaijun.blackbox.task_affinity" android:configChanges="mcc|mnc|locale|touchscreen|keyboard|keyboardHidden|navigation|orientation|screenLayout|uiMode|screenSize|smallestScreenSize|fontScale" />
+        <activity android:theme="@android:style/Theme.Translucent.NoTitleBar" android:name="top.niunaijun.blackbox.proxy.ProxyActivity$P91" android:exported="true" android:process=":p91" android:taskAffinity="top.niunaijun.blackbox.task_affinity" android:configChanges="mcc|mnc|locale|touchscreen|keyboard|keyboardHidden|navigation|orientation|screenLayout|uiMode|screenSize|smallestScreenSize|fontScale" />
+        <activity android:theme="@android:style/Theme.Translucent.NoTitleBar" android:name="top.niunaijun.blackbox.proxy.ProxyActivity$P92" android:exported="true" android:process=":p92" android:taskAffinity="top.niunaijun.blackbox.task_affinity" android:configChanges="mcc|mnc|locale|touchscreen|keyboard|keyboardHidden|navigation|orientation|screenLayout|uiMode|screenSize|smallestScreenSize|fontScale" />
+        <activity android:theme="@android:style/Theme.Translucent.NoTitleBar" android:name="top.niunaijun.blackbox.proxy.ProxyActivity$P93" android:exported="true" android:process=":p93" android:taskAffinity="top.niunaijun.blackbox.task_affinity" android:configChanges="mcc|mnc|locale|touchscreen|keyboard|keyboardHidden|navigation|orientation|screenLayout|uiMode|screenSize|smallestScreenSize|fontScale" />
+        <activity android:theme="@android:style/Theme.Translucent.NoTitleBar" android:name="top.niunaijun.blackbox.proxy.ProxyActivity$P94" android:exported="true" android:process=":p94" android:taskAffinity="top.niunaijun.blackbox.task_affinity" android:configChanges="mcc|mnc|locale|touchscreen|keyboard|keyboardHidden|navigation|orientation|screenLayout|uiMode|screenSize|smallestScreenSize|fontScale" />
+        <activity android:theme="@android:style/Theme.Translucent.NoTitleBar" android:name="top.niunaijun.blackbox.proxy.ProxyActivity$P95" android:exported="true" android:process=":p95" android:taskAffinity="top.niunaijun.blackbox.task_affinity" android:configChanges="mcc|mnc|locale|touchscreen|keyboard|keyboardHidden|navigation|orientation|screenLayout|uiMode|screenSize|smallestScreenSize|fontScale" />
+        <activity android:theme="@android:style/Theme.Translucent.NoTitleBar" android:name="top.niunaijun.blackbox.proxy.ProxyActivity$P96" android:exported="true" android:process=":p96" android:taskAffinity="top.niunaijun.blackbox.task_affinity" android:configChanges="mcc|mnc|locale|touchscreen|keyboard|keyboardHidden|navigation|orientation|screenLayout|uiMode|screenSize|smallestScreenSize|fontScale" />
+        <activity android:theme="@android:style/Theme.Translucent.NoTitleBar" android:name="top.niunaijun.blackbox.proxy.ProxyActivity$P97" android:exported="true" android:process=":p97" android:taskAffinity="top.niunaijun.blackbox.task_affinity" android:configChanges="mcc|mnc|locale|touchscreen|keyboard|keyboardHidden|navigation|orientation|screenLayout|uiMode|screenSize|smallestScreenSize|fontScale" />
+        <activity android:theme="@android:style/Theme.Translucent.NoTitleBar" android:name="top.niunaijun.blackbox.proxy.ProxyActivity$P98" android:exported="true" android:process=":p98" android:taskAffinity="top.niunaijun.blackbox.task_affinity" android:configChanges="mcc|mnc|locale|touchscreen|keyboard|keyboardHidden|navigation|orientation|screenLayout|uiMode|screenSize|smallestScreenSize|fontScale" />
+        <activity android:theme="@android:style/Theme.Translucent.NoTitleBar" android:name="top.niunaijun.blackbox.proxy.ProxyActivity$P99" android:exported="true" android:process=":p99" android:taskAffinity="top.niunaijun.blackbox.task_affinity" android:configChanges="mcc|mnc|locale|touchscreen|keyboard|keyboardHidden|navigation|orientation|screenLayout|uiMode|screenSize|smallestScreenSize|fontScale" />
+        <service android:name="top.niunaijun.blackbox.core.system.DaemonService" android:exported="false" android:process=":black" />
+        <service android:name="top.niunaijun.blackbox.core.system.DaemonService$DaemonInnerService" android:exported="false" android:process=":black" />
+        <provider android:name="top.niunaijun.blackbox.core.system.SystemCallProvider" android:exported="false" android:process=":black" android:authorities="${applicationId}.blackbox.SystemCallProvider" />
+        <provider android:name="top.niunaijun.blackbox.proxy.ProxyContentProvider$P0" android:exported="true" android:process=":p0" android:authorities="${applicationId}.proxy_content_provider_0" />
+        <provider android:name="top.niunaijun.blackbox.proxy.ProxyContentProvider$P1" android:exported="true" android:process=":p1" android:authorities="${applicationId}.proxy_content_provider_1" />
+        <provider android:name="top.niunaijun.blackbox.proxy.ProxyContentProvider$P2" android:exported="true" android:process=":p2" android:authorities="${applicationId}.proxy_content_provider_2" />
+        <provider android:name="top.niunaijun.blackbox.proxy.ProxyContentProvider$P3" android:exported="true" android:process=":p3" android:authorities="${applicationId}.proxy_content_provider_3" />
+        <provider android:name="top.niunaijun.blackbox.proxy.ProxyContentProvider$P4" android:exported="true" android:process=":p4" android:authorities="${applicationId}.proxy_content_provider_4" />
+        <provider android:name="top.niunaijun.blackbox.proxy.ProxyContentProvider$P5" android:exported="true" android:process=":p5" android:authorities="${applicationId}.proxy_content_provider_5" />
+        <provider android:name="top.niunaijun.blackbox.proxy.ProxyContentProvider$P6" android:exported="true" android:process=":p6" android:authorities="${applicationId}.proxy_content_provider_6" />
+        <provider android:name="top.niunaijun.blackbox.proxy.ProxyContentProvider$P7" android:exported="true" android:process=":p7" android:authorities="${applicationId}.proxy_content_provider_7" />
+        <provider android:name="top.niunaijun.blackbox.proxy.ProxyContentProvider$P8" android:exported="true" android:process=":p8" android:authorities="${applicationId}.proxy_content_provider_8" />
+        <provider android:name="top.niunaijun.blackbox.proxy.ProxyContentProvider$P9" android:exported="true" android:process=":p9" android:authorities="${applicationId}.proxy_content_provider_9" />
+        <provider android:name="top.niunaijun.blackbox.proxy.ProxyContentProvider$P10" android:exported="true" android:process=":p10" android:authorities="${applicationId}.proxy_content_provider_10" />
+        <provider android:name="top.niunaijun.blackbox.proxy.ProxyContentProvider$P11" android:exported="true" android:process=":p11" android:authorities="${applicationId}.proxy_content_provider_11" />
+        <provider android:name="top.niunaijun.blackbox.proxy.ProxyContentProvider$P12" android:exported="true" android:process=":p12" android:authorities="${applicationId}.proxy_content_provider_12" />
+        <provider android:name="top.niunaijun.blackbox.proxy.ProxyContentProvider$P13" android:exported="true" android:process=":p13" android:authorities="${applicationId}.proxy_content_provider_13" />
+        <provider android:name="top.niunaijun.blackbox.proxy.ProxyContentProvider$P14" android:exported="true" android:process=":p14" android:authorities="${applicationId}.proxy_content_provider_14" />
+        <provider android:name="top.niunaijun.blackbox.proxy.ProxyContentProvider$P15" android:exported="true" android:process=":p15" android:authorities="${applicationId}.proxy_content_provider_15" />
+        <provider android:name="top.niunaijun.blackbox.proxy.ProxyContentProvider$P16" android:exported="true" android:process=":p16" android:authorities="${applicationId}.proxy_content_provider_16" />
+        <provider android:name="top.niunaijun.blackbox.proxy.ProxyContentProvider$P17" android:exported="true" android:process=":p17" android:authorities="${applicationId}.proxy_content_provider_17" />
+        <provider android:name="top.niunaijun.blackbox.proxy.ProxyContentProvider$P18" android:exported="true" android:process=":p18" android:authorities="${applicationId}.proxy_content_provider_18" />
+        <provider android:name="top.niunaijun.blackbox.proxy.ProxyContentProvider$P19" android:exported="true" android:process=":p19" android:authorities="${applicationId}.proxy_content_provider_19" />
+        <provider android:name="top.niunaijun.blackbox.proxy.ProxyContentProvider$P20" android:exported="true" android:process=":p20" android:authorities="${applicationId}.proxy_content_provider_20" />
+        <provider android:name="top.niunaijun.blackbox.proxy.ProxyContentProvider$P21" android:exported="true" android:process=":p21" android:authorities="${applicationId}.proxy_content_provider_21" />
+        <provider android:name="top.niunaijun.blackbox.proxy.ProxyContentProvider$P22" android:exported="true" android:process=":p22" android:authorities="${applicationId}.proxy_content_provider_22" />
+        <provider android:name="top.niunaijun.blackbox.proxy.ProxyContentProvider$P23" android:exported="true" android:process=":p23" android:authorities="${applicationId}.proxy_content_provider_23" />
+        <provider android:name="top.niunaijun.blackbox.proxy.ProxyContentProvider$P24" android:exported="true" android:process=":p24" android:authorities="${applicationId}.proxy_content_provider_24" />
+        <provider android:name="top.niunaijun.blackbox.proxy.ProxyContentProvider$P25" android:exported="true" android:process=":p25" android:authorities="${applicationId}.proxy_content_provider_25" />
+        <provider android:name="top.niunaijun.blackbox.proxy.ProxyContentProvider$P26" android:exported="true" android:process=":p26" android:authorities="${applicationId}.proxy_content_provider_26" />
+        <provider android:name="top.niunaijun.blackbox.proxy.ProxyContentProvider$P27" android:exported="true" android:process=":p27" android:authorities="${applicationId}.proxy_content_provider_27" />
+        <provider android:name="top.niunaijun.blackbox.proxy.ProxyContentProvider$P28" android:exported="true" android:process=":p28" android:authorities="${applicationId}.proxy_content_provider_28" />
+        <provider android:name="top.niunaijun.blackbox.proxy.ProxyContentProvider$P29" android:exported="true" android:process=":p29" android:authorities="${applicationId}.proxy_content_provider_29" />
+        <provider android:name="top.niunaijun.blackbox.proxy.ProxyContentProvider$P30" android:exported="true" android:process=":p30" android:authorities="${applicationId}.proxy_content_provider_30" />
+        <provider android:name="top.niunaijun.blackbox.proxy.ProxyContentProvider$P31" android:exported="true" android:process=":p31" android:authorities="${applicationId}.proxy_content_provider_31" />
+        <provider android:name="top.niunaijun.blackbox.proxy.ProxyContentProvider$P32" android:exported="true" android:process=":p32" android:authorities="${applicationId}.proxy_content_provider_32" />
+        <provider android:name="top.niunaijun.blackbox.proxy.ProxyContentProvider$P33" android:exported="true" android:process=":p33" android:authorities="${applicationId}.proxy_content_provider_33" />
+        <provider android:name="top.niunaijun.blackbox.proxy.ProxyContentProvider$P34" android:exported="true" android:process=":p34" android:authorities="${applicationId}.proxy_content_provider_34" />
+        <provider android:name="top.niunaijun.blackbox.proxy.ProxyContentProvider$P35" android:exported="true" android:process=":p35" android:authorities="${applicationId}.proxy_content_provider_35" />
+        <provider android:name="top.niunaijun.blackbox.proxy.ProxyContentProvider$P36" android:exported="true" android:process=":p36" android:authorities="${applicationId}.proxy_content_provider_36" />
+        <provider android:name="top.niunaijun.blackbox.proxy.ProxyContentProvider$P37" android:exported="true" android:process=":p37" android:authorities="${applicationId}.proxy_content_provider_37" />
+        <provider android:name="top.niunaijun.blackbox.proxy.ProxyContentProvider$P38" android:exported="true" android:process=":p38" android:authorities="${applicationId}.proxy_content_provider_38" />
+        <provider android:name="top.niunaijun.blackbox.proxy.ProxyContentProvider$P39" android:exported="true" android:process=":p39" android:authorities="${applicationId}.proxy_content_provider_39" />
+        <provider android:name="top.niunaijun.blackbox.proxy.ProxyContentProvider$P40" android:exported="true" android:process=":p40" android:authorities="${applicationId}.proxy_content_provider_40" />
+        <provider android:name="top.niunaijun.blackbox.proxy.ProxyContentProvider$P41" android:exported="true" android:process=":p41" android:authorities="${applicationId}.proxy_content_provider_41" />
+        <provider android:name="top.niunaijun.blackbox.proxy.ProxyContentProvider$P42" android:exported="true" android:process=":p42" android:authorities="${applicationId}.proxy_content_provider_42" />
+        <provider android:name="top.niunaijun.blackbox.proxy.ProxyContentProvider$P43" android:exported="true" android:process=":p43" android:authorities="${applicationId}.proxy_content_provider_43" />
+        <provider android:name="top.niunaijun.blackbox.proxy.ProxyContentProvider$P44" android:exported="true" android:process=":p44" android:authorities="${applicationId}.proxy_content_provider_44" />
+        <provider android:name="top.niunaijun.blackbox.proxy.ProxyContentProvider$P45" android:exported="true" android:process=":p45" android:authorities="${applicationId}.proxy_content_provider_45" />
+        <provider android:name="top.niunaijun.blackbox.proxy.ProxyContentProvider$P46" android:exported="true" android:process=":p46" android:authorities="${applicationId}.proxy_content_provider_46" />
+        <provider android:name="top.niunaijun.blackbox.proxy.ProxyContentProvider$P47" android:exported="true" android:process=":p47" android:authorities="${applicationId}.proxy_content_provider_47" />
+        <provider android:name="top.niunaijun.blackbox.proxy.ProxyContentProvider$P48" android:exported="true" android:process=":p48" android:authorities="${applicationId}.proxy_content_provider_48" />
+        <provider android:name="top.niunaijun.blackbox.proxy.ProxyContentProvider$P49" android:exported="true" android:process=":p49" android:authorities="${applicationId}.proxy_content_provider_49" />
+        <provider android:name="top.niunaijun.blackbox.proxy.ProxyContentProvider$P50" android:exported="true" android:process=":p50" android:authorities="${applicationId}.proxy_content_provider_50" />
+        <provider android:name="top.niunaijun.blackbox.proxy.ProxyContentProvider$P51" android:exported="true" android:process=":p51" android:authorities="${applicationId}.proxy_content_provider_51" />
+        <provider android:name="top.niunaijun.blackbox.proxy.ProxyContentProvider$P52" android:exported="true" android:process=":p52" android:authorities="${applicationId}.proxy_content_provider_52" />
+        <provider android:name="top.niunaijun.blackbox.proxy.ProxyContentProvider$P53" android:exported="true" android:process=":p53" android:authorities="${applicationId}.proxy_content_provider_53" />
+        <provider android:name="top.niunaijun.blackbox.proxy.ProxyContentProvider$P54" android:exported="true" android:process=":p54" android:authorities="${applicationId}.proxy_content_provider_54" />
+        <provider android:name="top.niunaijun.blackbox.proxy.ProxyContentProvider$P55" android:exported="true" android:process=":p55" android:authorities="${applicationId}.proxy_content_provider_55" />
+        <provider android:name="top.niunaijun.blackbox.proxy.ProxyContentProvider$P56" android:exported="true" android:process=":p56" android:authorities="${applicationId}.proxy_content_provider_56" />
+        <provider android:name="top.niunaijun.blackbox.proxy.ProxyContentProvider$P57" android:exported="true" android:process=":p57" android:authorities="${applicationId}.proxy_content_provider_57" />
+        <provider android:name="top.niunaijun.blackbox.proxy.ProxyContentProvider$P58" android:exported="true" android:process=":p58" android:authorities="${applicationId}.proxy_content_provider_58" />
+        <provider android:name="top.niunaijun.blackbox.proxy.ProxyContentProvider$P59" android:exported="true" android:process=":p59" android:authorities="${applicationId}.proxy_content_provider_59" />
+        <provider android:name="top.niunaijun.blackbox.proxy.ProxyContentProvider$P60" android:exported="true" android:process=":p60" android:authorities="${applicationId}.proxy_content_provider_60" />
+        <provider android:name="top.niunaijun.blackbox.proxy.ProxyContentProvider$P61" android:exported="true" android:process=":p61" android:authorities="${applicationId}.proxy_content_provider_61" />
+        <provider android:name="top.niunaijun.blackbox.proxy.ProxyContentProvider$P62" android:exported="true" android:process=":p62" android:authorities="${applicationId}.proxy_content_provider_62" />
+        <provider android:name="top.niunaijun.blackbox.proxy.ProxyContentProvider$P63" android:exported="true" android:process=":p63" android:authorities="${applicationId}.proxy_content_provider_63" />
+        <provider android:name="top.niunaijun.blackbox.proxy.ProxyContentProvider$P64" android:exported="true" android:process=":p64" android:authorities="${applicationId}.proxy_content_provider_64" />
+        <provider android:name="top.niunaijun.blackbox.proxy.ProxyContentProvider$P65" android:exported="true" android:process=":p65" android:authorities="${applicationId}.proxy_content_provider_65" />
+        <provider android:name="top.niunaijun.blackbox.proxy.ProxyContentProvider$P66" android:exported="true" android:process=":p66" android:authorities="${applicationId}.proxy_content_provider_66" />
+        <provider android:name="top.niunaijun.blackbox.proxy.ProxyContentProvider$P67" android:exported="true" android:process=":p67" android:authorities="${applicationId}.proxy_content_provider_67" />
+        <provider android:name="top.niunaijun.blackbox.proxy.ProxyContentProvider$P68" android:exported="true" android:process=":p68" android:authorities="${applicationId}.proxy_content_provider_68" />
+        <provider android:name="top.niunaijun.blackbox.proxy.ProxyContentProvider$P69" android:exported="true" android:process=":p69" android:authorities="${applicationId}.proxy_content_provider_69" />
+        <provider android:name="top.niunaijun.blackbox.proxy.ProxyContentProvider$P70" android:exported="true" android:process=":p70" android:authorities="${applicationId}.proxy_content_provider_70" />
+        <provider android:name="top.niunaijun.blackbox.proxy.ProxyContentProvider$P71" android:exported="true" android:process=":p71" android:authorities="${applicationId}.proxy_content_provider_71" />
+        <provider android:name="top.niunaijun.blackbox.proxy.ProxyContentProvider$P72" android:exported="true" android:process=":p72" android:authorities="${applicationId}.proxy_content_provider_72" />
+        <provider android:name="top.niunaijun.blackbox.proxy.ProxyContentProvider$P73" android:exported="true" android:process=":p73" android:authorities="${applicationId}.proxy_content_provider_73" />
+        <provider android:name="top.niunaijun.blackbox.proxy.ProxyContentProvider$P74" android:exported="true" android:process=":p74" android:authorities="${applicationId}.proxy_content_provider_74" />
+        <provider android:name="top.niunaijun.blackbox.proxy.ProxyContentProvider$P75" android:exported="true" android:process=":p75" android:authorities="${applicationId}.proxy_content_provider_75" />
+        <provider android:name="top.niunaijun.blackbox.proxy.ProxyContentProvider$P76" android:exported="true" android:process=":p76" android:authorities="${applicationId}.proxy_content_provider_76" />
+        <provider android:name="top.niunaijun.blackbox.proxy.ProxyContentProvider$P77" android:exported="true" android:process=":p77" android:authorities="${applicationId}.proxy_content_provider_77" />
+        <provider android:name="top.niunaijun.blackbox.proxy.ProxyContentProvider$P78" android:exported="true" android:process=":p78" android:authorities="${applicationId}.proxy_content_provider_78" />
+        <provider android:name="top.niunaijun.blackbox.proxy.ProxyContentProvider$P79" android:exported="true" android:process=":p79" android:authorities="${applicationId}.proxy_content_provider_79" />
+        <provider android:name="top.niunaijun.blackbox.proxy.ProxyContentProvider$P80" android:exported="true" android:process=":p80" android:authorities="${applicationId}.proxy_content_provider_80" />
+        <provider android:name="top.niunaijun.blackbox.proxy.ProxyContentProvider$P81" android:exported="true" android:process=":p81" android:authorities="${applicationId}.proxy_content_provider_81" />
+        <provider android:name="top.niunaijun.blackbox.proxy.ProxyContentProvider$P82" android:exported="true" android:process=":p82" android:authorities="${applicationId}.proxy_content_provider_82" />
+        <provider android:name="top.niunaijun.blackbox.proxy.ProxyContentProvider$P83" android:exported="true" android:process=":p83" android:authorities="${applicationId}.proxy_content_provider_83" />
+        <provider android:name="top.niunaijun.blackbox.proxy.ProxyContentProvider$P84" android:exported="true" android:process=":p84" android:authorities="${applicationId}.proxy_content_provider_84" />
+        <provider android:name="top.niunaijun.blackbox.proxy.ProxyContentProvider$P85" android:exported="true" android:process=":p85" android:authorities="${applicationId}.proxy_content_provider_85" />
+        <provider android:name="top.niunaijun.blackbox.proxy.ProxyContentProvider$P86" android:exported="true" android:process=":p86" android:authorities="${applicationId}.proxy_content_provider_86" />
+        <provider android:name="top.niunaijun.blackbox.proxy.ProxyContentProvider$P87" android:exported="true" android:process=":p87" android:authorities="${applicationId}.proxy_content_provider_87" />
+        <provider android:name="top.niunaijun.blackbox.proxy.ProxyContentProvider$P88" android:exported="true" android:process=":p88" android:authorities="${applicationId}.proxy_content_provider_88" />
+        <provider android:name="top.niunaijun.blackbox.proxy.ProxyContentProvider$P89" android:exported="true" android:process=":p89" android:authorities="${applicationId}.proxy_content_provider_89" />
+        <provider android:name="top.niunaijun.blackbox.proxy.ProxyContentProvider$P90" android:exported="true" android:process=":p90" android:authorities="${applicationId}.proxy_content_provider_90" />
+        <provider android:name="top.niunaijun.blackbox.proxy.ProxyContentProvider$P91" android:exported="true" android:process=":p91" android:authorities="${applicationId}.proxy_content_provider_91" />
+        <provider android:name="top.niunaijun.blackbox.proxy.ProxyContentProvider$P92" android:exported="true" android:process=":p92" android:authorities="${applicationId}.proxy_content_provider_92" />
+        <provider android:name="top.niunaijun.blackbox.proxy.ProxyContentProvider$P93" android:exported="true" android:process=":p93" android:authorities="${applicationId}.proxy_content_provider_93" />
+        <provider android:name="top.niunaijun.blackbox.proxy.ProxyContentProvider$P94" android:exported="true" android:process=":p94" android:authorities="${applicationId}.proxy_content_provider_94" />
+        <provider android:name="top.niunaijun.blackbox.proxy.ProxyContentProvider$P95" android:exported="true" android:process=":p95" android:authorities="${applicationId}.proxy_content_provider_95" />
+        <provider android:name="top.niunaijun.blackbox.proxy.ProxyContentProvider$P96" android:exported="true" android:process=":p96" android:authorities="${applicationId}.proxy_content_provider_96" />
+        <provider android:name="top.niunaijun.blackbox.proxy.ProxyContentProvider$P97" android:exported="true" android:process=":p97" android:authorities="${applicationId}.proxy_content_provider_97" />
+        <provider android:name="top.niunaijun.blackbox.proxy.ProxyContentProvider$P98" android:exported="true" android:process=":p98" android:authorities="${applicationId}.proxy_content_provider_98" />
+        <provider android:name="top.niunaijun.blackbox.proxy.ProxyContentProvider$P99" android:exported="true" android:process=":p99" android:authorities="${applicationId}.proxy_content_provider_99" />
+
+    </application>
+
+</manifest>

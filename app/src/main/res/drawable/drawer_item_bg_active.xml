@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- 侧滑栏「当前所在位置」条目背景：强调色浅底 + 点击水波纹 -->
+<ripple xmlns:android="http://schemas.android.com/apk/res/android"
+    android:color="@color/ripple">
+    <item>
+        <shape android:shape="rectangle">
+            <solid android:color="?attr/accentDim" />
+        </shape>
+    </item>
+    <item android:id="@android:id/mask">
+        <color android:color="@android:color/white" />
+    </item>
+</ripple>
