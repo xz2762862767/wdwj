@@ -29,3 +29,6 @@ signkey/
 # 例外：assets 里的预编译 dex / 演示密钥库是应用运行时资源，必须入库
 !app/src/main/assets/*.dex
 !app/src/main/assets/inject.keystore
+
+# 例外：release/ 下的 APK 是随仓库分发的下载产物
+!release/*.apk
